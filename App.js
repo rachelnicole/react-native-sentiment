@@ -1,41 +1,65 @@
-import {Container, Header, Content, Footer, Title} from 'native-base';
-import React, {Component} from 'react';
+import { Container, Header, Content, Footer, Title } from 'native-base';
+import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
-
+import config from './config';
 
 export default class LayoutExample extends Component {
   constructor(props) {
     super(props);
-    this.state = {text: ''};
+    this.state = { text: '' };
   }
 
   onPressLearnMore() {
-    alert('pressd');
+    var data = {"documents": [
+      {
+        "language": "en",
+        "id": "sdfasdf",
+        "text": "what the hell is this"
+      }
+    ]};
+
+    return fetch('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': config.KEY,
+      },
+      body: JSON.stringify(this.data)
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // console.log(responseJson);
+        alert(responseJson.documents[0].score)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
   }
 
   render() {
-      return (
-          <Container style={styles.main}>
+    return (
+      <Container style={styles.main}>
 
-              <Content>
-              <Text style={styles.title}>Sentiment</Text>
-              <View style={styles.textBorderStyle}>
-              <TextInput
-                style={styles.textarea}
-                placeholder="Add text here..."
-                onChangeText={(text) => this.setState({text})}
-              />
-              </View>
-              <Button
-              onPress={this.onPressLearnMore}
-              title="Submit"
-              style={styles.submit}
-              accessibilityLabel="Learn more about this purple button"
+        <Content>
+          <Text style={styles.title}>Sentiment</Text>
+          <View style={styles.textBorderStyle}>
+            <TextInput
+              style={styles.textarea}
+              placeholder="Add text here..."
+              onChangeText={(text) => this.setState({ text })}
             />
-              </Content>
+          </View>
+          <Button
+            onPress={this.onPressLearnMore}
+            title="Submit"
+            style={styles.submit}
+            accessibilityLabel="Learn more about this purple button"
+          />
+        </Content>
 
-          </Container>
-      );
+      </Container>
+    );
   }
 }
 
@@ -56,7 +80,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: '#ccc',
-    borderRadius: 10, 
+    borderRadius: 10,
     height: 40,
     width: 300,
     backgroundColor: 'white',
