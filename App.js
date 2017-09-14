@@ -1,12 +1,16 @@
 import {Container, Header, Content, Footer, Title} from 'native-base';
 import React, {Component} from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
 
 
 export default class LayoutExample extends Component {
   constructor(props) {
     super(props);
     this.state = {text: ''};
+  }
+
+  onPressLearnMore() {
+    alert('pressd');
   }
 
   render() {
@@ -22,6 +26,12 @@ export default class LayoutExample extends Component {
                 onChangeText={(text) => this.setState({text})}
               />
               </View>
+              <Button
+              onPress={this.onPressLearnMore}
+              title="Submit"
+              style={styles.submit}
+              accessibilityLabel="Learn more about this purple button"
+            />
               </Content>
 
           </Container>
@@ -31,7 +41,7 @@ export default class LayoutExample extends Component {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: '#FF6F69',
+    backgroundColor: '#FF6F69'
   },
   title: {
     fontSize: 30,
@@ -41,6 +51,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Courier',
   },
   textBorderStyle: {
+    flex: 1,
+    justifyContent: 'center',
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: '#ccc',
@@ -53,5 +65,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Courier',
     fontSize: 15,
     padding: 20,
+  },
+  submit: {
+    padding: 30,
+    borderColor: 'white',
+    borderWidth: 1,
+    color: 'white',
   },
 });
