@@ -10,13 +10,15 @@ export default class LayoutExample extends Component {
   }
 
   onPressLearnMore() {
-    var data = {"documents": [
-      {
-        "language": "en",
-        "id": "sdfasdf",
-        "text": "what the hell is this"
-      }
-    ]};
+    var data = {
+      "documents": [
+        {
+          "language": "en",
+          "id": "sdfasdf",
+          "text": "what the hell is this"
+        }
+      ]
+    };
 
     return fetch('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', {
       method: 'POST',
@@ -24,11 +26,10 @@ export default class LayoutExample extends Component {
         'Content-Type': 'application/json',
         'Ocp-Apim-Subscription-Key': config.KEY,
       },
-      body: JSON.stringify(this.data)
+      body: JSON.stringify(data)
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        // console.log(responseJson);
         alert(responseJson.documents[0].score)
       })
       .catch((error) => {
