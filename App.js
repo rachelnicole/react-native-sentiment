@@ -47,7 +47,6 @@ export default class LayoutExample extends Component {
           <View style={styles.textBorderStyle}>
             <TextInput
               style={styles.textarea}
-              placeholder="Add text here..."
               onChangeText={(text) => this.setState({ text })}
             />
           </View>
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#ccc',
     borderRadius: 10,
-    height: 40,
+    height: 70,
     width: 300,
     backgroundColor: 'white',
   },
@@ -90,6 +89,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Courier',
     fontSize: 15,
     padding: 20,
+    color: 'black'
   },
   submit: {
     padding: 30,
