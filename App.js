@@ -7,6 +7,11 @@ export default class LayoutExample extends Component {
   constructor(props) {
     super(props);
     this.state = { text: '' };
+    this.onPressLearnMore = this.onPressLearnMore.bind(this);
+  }
+
+  componentWillMount() {
+    this.setState({ text: '' });
   }
 
   onPressLearnMore() {
@@ -20,21 +25,24 @@ export default class LayoutExample extends Component {
       ]
     };
 
-    return fetch('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': config.KEY,
-      },
-      body: JSON.stringify(data)
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        alert(responseJson.documents[0].score)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    alert(this.state.text);
+
+    // return fetch('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Ocp-Apim-Subscription-Key': config.KEY,
+    //   },
+    //   body: JSON.stringify(data)
+    // })
+    // .then((response) => response.json())
+    // .then((responseJson) => {
+    //   //alert(responseJson.documents[0].score)
+    //   alert('this.state.text')
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    // });
 
   }
 
