@@ -20,21 +20,10 @@ export default class LayoutExample extends Component {
         {
           "language": "en",
           "id": "sdfasdf",
-          "text": ""
+          "text": this.state.text
         }
       ]
     };
-
-    var documentsObject = data.documents[0];
-
-    for (var key in documentsObject) {
-      if (documentsObject.hasOwnProperty('text')) {
-        data.documents[0].text = this.state.text;
-      }
-    }
-
-    console.log(data.documents[0])
-
 
     return fetch('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', {
       method: 'POST',
@@ -46,14 +35,11 @@ export default class LayoutExample extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson)
-      console.log('-------------')
-      console.log(responseJson.documents[0].score)
+      console.log(Math.round( responseJson.documents[0].score * 10 ) / 10)
     })
     .catch((error) => {
       console.log(error);
     });
-
   }
 
   render() {
