@@ -20,29 +20,39 @@ export default class LayoutExample extends Component {
         {
           "language": "en",
           "id": "sdfasdf",
-          "text": "what the hell is this"
+          "text": ""
         }
       ]
     };
 
-    alert(this.state.text);
+    var documentsObject = data.documents[0];
 
-    // return fetch('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Ocp-Apim-Subscription-Key': config.KEY,
-    //   },
-    //   body: JSON.stringify(data)
-    // })
-    // .then((response) => response.json())
-    // .then((responseJson) => {
-    //   //alert(responseJson.documents[0].score)
-    //   alert('this.state.text')
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
+    for (var key in documentsObject) {
+      if (documentsObject.hasOwnProperty('text')) {
+        data.documents[0].text = this.state.text;
+      }
+    }
+
+    console.log(data.documents[0])
+
+
+    return fetch('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': config.KEY,
+      },
+      body: JSON.stringify(data)
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log(responseJson)
+      console.log('-------------')
+      console.log(responseJson.documents[0].score)
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   }
 
