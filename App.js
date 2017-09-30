@@ -11,7 +11,10 @@ export default class LayoutExample extends Component {
   }
 
   componentWillMount() {
-    this.setState({ text: '' });
+    this.setState({ 
+      text: '', 
+      bgColor: '#FF6F69' 
+    });
   }
 
   onPressLearnMore() {
@@ -35,16 +38,51 @@ export default class LayoutExample extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(Math.round( responseJson.documents[0].score * 10 ) / 10)
+      var backgroundColor = Math.round( responseJson.documents[0].score * 10 ) / 10;
+      alert(backgroundColor);
+      this.setState({ bgColor: backgroundColor});
     })
     .catch((error) => {
       console.log(error);
     });
   }
 
+  bgColor(value) {
+    var returnColor; 
+    switch (value) {
+      case 0:
+        returnColor = '#7f1437'
+        break;
+      case .1:
+        alert('Apples are $0.32 a pound.');
+        break;
+      case .2:
+        alert('Bananas are $0.48 a pound.');
+        break;
+      case .3:
+        alert('Cherries are $3.00 a pound.');
+        break;
+      case .7:
+        alert('Mangoes and papayas are $2.79 a pound.');
+        break;
+      case .8:
+        alert('Mangoes and papayas are $2.79 a pound.');
+        break;
+      case .9:
+        alert('Mangoes and papayas are $2.79 a pound.');
+        break;
+      case 1:
+        alert('Mangoes and papayas are $2.79 a pound.');
+        break;
+      default:
+        alert('Sorry, we are out of.');
+    }
+    return returnColor;
+  }
+
   render() {
     return (
-      <Container style={styles.main}>
+      <Container style={{backgroundColor: this.state.bgColor}}>
 
         <Content>
           <Text style={styles.title}>Sentiment</Text>
@@ -68,9 +106,6 @@ export default class LayoutExample extends Component {
 }
 
 const styles = StyleSheet.create({
-  main: {
-    backgroundColor: '#FF6F69'
-  },
   title: {
     fontSize: 30,
     color: 'white',
