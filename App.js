@@ -1,6 +1,6 @@
-import { Container, Header, Content, Footer, Title } from 'native-base';
+import { Container, Header, Content, Footer, Title, Button } from 'native-base';
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import config from './config';
 
 export default class LayoutExample extends Component {
@@ -11,9 +11,9 @@ export default class LayoutExample extends Component {
   }
 
   componentWillMount() {
-    this.setState({ 
-      text: '', 
-      bgColor: '#FF6F69' 
+    this.setState({
+      text: '',
+      bgColor: '#FF6F69'
     });
   }
 
@@ -36,53 +36,53 @@ export default class LayoutExample extends Component {
       },
       body: JSON.stringify(data)
     })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      var backgroundColor = Math.round( responseJson.documents[0].score * 10 ) / 10;
-      alert(backgroundColor);
-      this.setState({ bgColor: backgroundColor});
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then((response) => response.json())
+      .then((responseJson) => {
+        var backgroundColor = this.backgroundMood(Math.round(responseJson.documents[0].score * 10) / 10);
+        alert(backgroundColor);
+
+        this.setState({ bgColor: backgroundColor });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
-  bgColor(value) {
-    var returnColor; 
-    switch (value) {
-      case 0:
-        returnColor = '#7f1437'
-        break;
-      case .1:
-        alert('Apples are $0.32 a pound.');
-        break;
-      case .2:
-        alert('Bananas are $0.48 a pound.');
-        break;
-      case .3:
-        alert('Cherries are $3.00 a pound.');
-        break;
-      case .7:
-        alert('Mangoes and papayas are $2.79 a pound.');
-        break;
-      case .8:
-        alert('Mangoes and papayas are $2.79 a pound.');
-        break;
-      case .9:
-        alert('Mangoes and papayas are $2.79 a pound.');
-        break;
-      case 1:
-        alert('Mangoes and papayas are $2.79 a pound.');
-        break;
-      default:
-        alert('Sorry, we are out of.');
+  backgroundMood(value) {
+    var returnColor;
+    if (value == 0) {
+      return '#7F1437';
     }
-    return returnColor;
+    if (value == .1) {
+      return '#7F1437';
+    }
+    if (value == .2) {
+      return '#B01C41';
+    }
+    if (value == .3) {
+      return '#CC2C66';
+    }
+    if (value == .7) {
+      return '#208946';
+    }
+    if (value == .8) {
+      return '#2E9C5F';
+    }
+    if (value == .9) {
+      return '#31C774';
+    }
+    if (value == 1) {
+      return '#29EB94';
+    }
+    else {
+      return '#3D81DF';
+    }
+
   }
 
   render() {
     return (
-      <Container style={{backgroundColor: this.state.bgColor}}>
+      <Container style={{ backgroundColor: this.state.bgColor }}>
 
         <Content>
           <Text style={styles.title}>Sentiment</Text>
@@ -92,12 +92,13 @@ export default class LayoutExample extends Component {
               onChangeText={(text) => this.setState({ text })}
             />
           </View>
-          <Button
+          <Button bordered light
             onPress={this.onPressLearnMore}
-            title="Submit"
             style={styles.submit}
             accessibilityLabel="Learn more about this purple button"
-          />
+          >
+            <Text style={{color: 'white'}}>Submit</Text>
+          </Button>
         </Content>
 
       </Container>
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   submit: {
+    marginTop: 10,
     padding: 30,
     borderColor: 'white',
     borderWidth: 1,
