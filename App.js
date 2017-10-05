@@ -40,7 +40,7 @@ export default class LayoutExample extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         var backgroundColor = this.backgroundMood(Math.round(responseJson.documents[0].score * 10) / 10);
-        
+
 
         this.setState({ bgColor: backgroundColor });
 
@@ -94,12 +94,14 @@ export default class LayoutExample extends Component {
 
   render() {
     return (
-      <Container style={{ backgroundColor: this.state.bgColor, flex: 1, 
+      <Container style={{
+        backgroundColor: this.state.bgColor, flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center' }}>
+        alignItems: 'center'
+      }}>
 
-        <Content style={{flex: 1}}>
+        <Content style={{ flex: 1 }}>
           <Text style={styles.title}>Sentiment</Text>
           <View style={styles.textBorderStyle}>
             <TextInput
@@ -111,11 +113,11 @@ export default class LayoutExample extends Component {
             onPress={this.onPressLearnMore}
             style={styles.submit}
           >
-            <Text style={{color: 'white', textAlign: 'center', flex: 1 }}>Submit</Text>
+            <Text style={{ color: 'white', textAlign: 'center', flex: 1 }}>Submit</Text>
           </Button>
           <View style={styles.emoji}>
-            <Text style={{ flex: 1, textAlign: 'center', fontSize: 90}}>
-            {this.state.emoji}
+            <Text style={{ flex: 1, textAlign: 'center', fontSize: 90 }}>
+              {this.state.emoji}
             </Text>
           </View>
         </Content>
