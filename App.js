@@ -6,14 +6,15 @@ import config from './config';
 export default class LayoutExample extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: '' };
+    this.state = { text: '', emoji: '' };
     this.onPressLearnMore = this.onPressLearnMore.bind(this);
   }
 
   componentWillMount() {
     this.setState({
       text: '',
-      bgColor: '#FF6F69'
+      bgColor: '#FF6F69',
+      emoji: ''
     });
   }
 
@@ -39,9 +40,20 @@ export default class LayoutExample extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         var backgroundColor = this.backgroundMood(Math.round(responseJson.documents[0].score * 10) / 10);
-        alert(backgroundColor);
+        
 
         this.setState({ bgColor: backgroundColor });
+
+        if ((Math.round(responseJson.documents[0].score * 10) / 10) <= .4 || (Math.round(responseJson.documents[0].score * 10) / 10) == 0) {
+          this.setState({ emoji: '🙁' });
+        }
+        if ((Math.round(responseJson.documents[0].score * 10) / 10) >= .6) {
+          this.setState({ emoji: '😃' });
+        }
+        if ((Math.round(responseJson.documents[0].score * 10) / 10) == .5) {
+          this.setState({ emoji: '😐' });
+        }
+
       })
       .catch((error) => {
         console.log(error);
@@ -82,9 +94,12 @@ export default class LayoutExample extends Component {
 
   render() {
     return (
-      <Container style={{ backgroundColor: this.state.bgColor }}>
+      <Container style={{ backgroundColor: this.state.bgColor, flex: 1, 
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center' }}>
 
-        <Content>
+        <Content style={{flex: 1}}>
           <Text style={styles.title}>Sentiment</Text>
           <View style={styles.textBorderStyle}>
             <TextInput
@@ -95,10 +110,14 @@ export default class LayoutExample extends Component {
           <Button bordered light
             onPress={this.onPressLearnMore}
             style={styles.submit}
-            accessibilityLabel="Learn more about this purple button"
           >
-            <Text style={{color: 'white'}}>Submit</Text>
+            <Text style={{color: 'white', textAlign: 'center', flex: 1 }}>Submit</Text>
           </Button>
+          <View style={styles.emoji}>
+            <Text style={{ flex: 1, textAlign: 'center', fontSize: 90}}>
+            {this.state.emoji}
+            </Text>
+          </View>
         </Content>
 
       </Container>
@@ -121,7 +140,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#ccc',
     borderRadius: 10,
-    height: 70,
+    height: 120,
     width: 300,
     backgroundColor: 'white',
   },
@@ -132,10 +151,15 @@ const styles = StyleSheet.create({
     color: 'black'
   },
   submit: {
-    marginTop: 10,
-    padding: 30,
+    alignSelf: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    marginTop: 20,
     borderColor: 'white',
     borderWidth: 1,
-    color: 'white',
   },
+  emoji: {
+    padding: 10
+  }
 });
