@@ -1,4 +1,4 @@
-import { Container, Header, Content, Footer, Title, Button } from 'native-base';
+import { Container, Header, Content, Footer, Title, Button, Spinner } from 'native-base';
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import config from './config';
@@ -14,11 +14,14 @@ export default class SentimentApp extends Component {
     this.setState({
       text: '',
       bgColor: '#FF6F69',
-      emoji: ''
+      emoji: '',
+      busy: false,
     });
   }
 
   onPressLearnMore() {
+    this.setState({busy: true});
+
     var data = {
       "documents": [
         {
@@ -33,62 +36,73 @@ export default class SentimentApp extends Component {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': config.KEY,
+        'Ocp-Apim-Subscription-Key': config.key,
       },
       body: JSON.stringify(data)
     })
       .then((response) => response.json())
       .then((responseJson) => {
-
-        var backgroundColor = this.backgroundMood(Math.round(responseJson.documents[0].score * 10) / 10);
-
-
-        this.setState({ bgColor: backgroundColor });
-
-        if ((Math.round(responseJson.documents[0].score * 10) / 10) <= .4 ) {
-          this.setState({ emoji: '🙁' });
-        }
-        if ((Math.round(responseJson.documents[0].score * 10) / 10) >= .6) {
-          this.setState({ emoji: '😃' });
-        }
-        if ((Math.round(responseJson.documents[0].score * 10) / 10) == .5) {
-          this.setState({ emoji: '😐' });
-        }
-
+        var score = responseJson.documents[0].score;
+        this.setState({
+          bgColor: this.getBackgroundColor(score),
+          emoji: this.getEmoji(score),
+        });
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
+      .finally(() => this.setState({busy: false}));
   }
 
-  backgroundMood(value) {
-    if (value < 0.2) {
-      return '#7F1437';
+  getEmoji(score) {
+    if (score < 0.4) {
+      return '🙁';
+    } else if (score <= 0.6) {
+      return '😐';
+    } else /* score > 0.6 */ {
+      return '😃';      
     }
-    if (value < 0.3) {
-      return '#B01C41';
-    }
-    if (value < 0.4) {
-      return '#CC2C66';
-    }
-    if (value <= 0.6 /* neutral is 0.4 - 0.6 inclusive */) {
-        return '#3D81DF';
-    }
-    if (value < 0.8) {
-      return '#208946';
-    }
-    if (value < 0.9) {
-      return '#2E9C5F';
-    }
-    if (value < 1) {
-      return '#31C774';
-    }
+  }
 
-    /* score == 1, seems unlikely */
-    return '#29EB94';
+  getBackgroundColor(score) {
+    if (score < 0.2) {
+      return '#7F1437';
+    } else if (score < 0.3) {
+      return '#B01C41';
+    } else if (score < 0.4) {
+      return '#CC2C66';
+    } else if (score <= 0.6 /* neutral is 0.4 - 0.6 inclusive */) {
+        return '#3D81DF';
+    } else if (score < 0.8) {
+      return '#208946';
+    } else if (score < 0.9) {
+      return '#2E9C5F';
+    } else if (score < 1) {
+      return '#31C774';
+    } else /* score == 1, seems unlikely */ {
+      return '#29EB94';    
+    }
   }
 
   render() {
+    let emojiOrLoading;
+    if (!this.state.busy) {
+      emojiOrLoading = (
+        <View style={styles.emoji}>
+          <Text style={{ flex: 1, textAlign: 'center', fontSize: 90 }}>
+            {this.state.emoji}
+          </Text>
+        </View>
+      );
+    } else {
+      emojiOrLoading = (
+        <View style={styles.busyContainer}>
+          <Spinner color='white' />
+          <Text style={styles.busyText}>Calculating Sentiment...</Text>
+        </View>
+      );
+    }
+
     return (
       <Container style={{
         backgroundColor: this.state.bgColor, flex: 1,
@@ -108,14 +122,11 @@ export default class SentimentApp extends Component {
           <Button bordered light
             onPress={this.onPressLearnMore}
             style={styles.submit}
+            disabled={this.state.busy}
           >
             <Text style={{ color: 'white', textAlign: 'center', flex: 1 }}>Submit</Text>
           </Button>
-          <View style={styles.emoji}>
-            <Text style={{ flex: 1, textAlign: 'center', fontSize: 90 }}>
-              {this.state.emoji}
-            </Text>
-          </View>
+          {emojiOrLoading}
         </Content>
 
       </Container>
@@ -159,5 +170,13 @@ const styles = StyleSheet.create({
   },
   emoji: {
     padding: 10
-  }
+  },
+  busyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  busyText: {
+    textAlign: 'center',
+    color: 'white',
+  },
 });
