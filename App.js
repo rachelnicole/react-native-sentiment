@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import config from './config';
 
-export default class LayoutExample extends Component {
+export default class SentimentApp extends Component {
   constructor(props) {
     super(props);
     this.state = { text: '', emoji: '' };
@@ -23,7 +23,7 @@ export default class LayoutExample extends Component {
       "documents": [
         {
           "language": "en",
-          "id": "sdfasdf",
+          "id": "text input placeholder",
           "text": this.state.text
         }
       ]
@@ -39,12 +39,13 @@ export default class LayoutExample extends Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
+
         var backgroundColor = this.backgroundMood(Math.round(responseJson.documents[0].score * 10) / 10);
 
 
         this.setState({ bgColor: backgroundColor });
 
-        if ((Math.round(responseJson.documents[0].score * 10) / 10) <= .4 || (Math.round(responseJson.documents[0].score * 10) / 10) == 0) {
+        if ((Math.round(responseJson.documents[0].score * 10) / 10) <= .4 ) {
           this.setState({ emoji: '🙁' });
         }
         if ((Math.round(responseJson.documents[0].score * 10) / 10) >= .6) {
@@ -61,35 +62,30 @@ export default class LayoutExample extends Component {
   }
 
   backgroundMood(value) {
-    var returnColor;
-    if (value == 0) {
+    if (value < 0.2) {
       return '#7F1437';
     }
-    if (value == .1) {
-      return '#7F1437';
-    }
-    if (value == .2) {
+    if (value < 0.3) {
       return '#B01C41';
     }
-    if (value == .3) {
+    if (value < 0.4) {
       return '#CC2C66';
     }
-    if (value == .7) {
+    if (value <= 0.6 /* neutral is 0.4 - 0.6 inclusive */) {
+        return '#3D81DF';
+    }
+    if (value < 0.8) {
       return '#208946';
     }
-    if (value == .8) {
+    if (value < 0.9) {
       return '#2E9C5F';
     }
-    if (value == .9) {
+    if (value < 1) {
       return '#31C774';
     }
-    if (value == 1) {
-      return '#29EB94';
-    }
-    else {
-      return '#3D81DF';
-    }
 
+    /* score == 1, seems unlikely */
+    return '#29EB94';
   }
 
   render() {
